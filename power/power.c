@@ -341,20 +341,26 @@ set_unstable_memory_state(int state) {
 int set_deepsleep_state(int on)
 {
 
-    LOGI("***set_deepsleep_state  %d", on);
+    LOGI("***set_deepsleep_state %d", on);
 
     initialize_fds();
 
     if (g_error)
-        return g_error;
+        goto failure;
 
     char buf[32];
     int len;
 
-    len = snprintf(buf, sizeof(buf), "%s", deepsleep_state);
+    if (on)
+        len = snprintf(buf, sizeof(buf), "%s", deepsleep_state);
+    else
+        len = snprintf(buf, sizeof(buf), "%s", on_state);
+
+    buf[sizeof(buf) - 1] = '\0';
     len = write(g_fds[REQUEST_STATE], buf, len);
+    failure:
     if(len < 0) {
-        LOGE("Failed setting last user activity: g_error=%d\n", g_error);
+        LOGE("Failed setting deepsleep_state: g_error=%d\n", g_error);
     }
     return 0;
 }
