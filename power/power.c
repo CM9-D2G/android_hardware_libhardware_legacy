@@ -68,7 +68,6 @@ static int g_error = 1;
 
 static const char *off_state = "mem";
 static const char *on_state = "on";
-static const char *deepsleep_state = "deepsleep";
 
 static int64_t systemTime()
 {
@@ -337,30 +336,3 @@ set_unstable_memory_state(int state) {
     return 0;
 }
 #endif
-
-int set_deepsleep_state(int on)
-{
-
-    LOGI("***set_deepsleep_state %d", on);
-
-    initialize_fds();
-
-    if (g_error)
-        goto failure;
-
-    char buf[32];
-    int len;
-
-    if (on)
-        len = snprintf(buf, sizeof(buf), "%s", deepsleep_state);
-    else
-        len = snprintf(buf, sizeof(buf), "%s", on_state);
-
-    buf[sizeof(buf) - 1] = '\0';
-    len = write(g_fds[REQUEST_STATE], buf, len);
-    failure:
-    if(len < 0) {
-        LOGE("Failed setting deepsleep_state: g_error=%d\n", g_error);
-    }
-    return 0;
-}

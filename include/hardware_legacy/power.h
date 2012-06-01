@@ -49,9 +49,6 @@ int set_last_user_activity_timeout(int64_t delay);
 int set_unstable_memory_state(int state);
 #endif
 
-// Moto DeepSleep implementation
-int set_deepsleep_state(int on);
-
 #if __cplusplus
 } // extern "C"
 #endif
